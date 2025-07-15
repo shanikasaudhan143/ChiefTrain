@@ -2,13 +2,15 @@ from fastapi import APIRouter
 from app.schemas import ChatRequest
 from app.supabase_client import supabase
 from langchain.llms import OpenAI
-
+import os
 router = APIRouter(
     prefix="/chat",
     tags=["chat"]
 )
 
-llm = OpenAI(temperature=0)
+llm = OpenAI(model_name="gpt-3.5-turbo",
+        temperature=0.7,
+        openai_api_key=os.getenv("OPENAI_API_KEY"))
 
 @router.post("/")
 async def chat(req: ChatRequest):
