@@ -1,0 +1,127 @@
+/* 1. Make the body a flex-center wrapper */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f0f0f0;       /* subtle page background */
+  padding: 20px;            /* some breathing room on very small devices */
+}
+
+/* 2. Chatbot container */
+.chatbot-container {
+  width: 90%;               /* fluid up to max */
+  max-width: 400px;         /* never wider than 400px */
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: all 0.3s ease;
+}
+
+/* Header */
+.chatbot-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #4b0082;
+}
+
+/* Option buttons */
+.chatbot-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.chatbot-options button {
+  padding: 12px;
+  font-size: 1rem;
+  border: none;
+  background: #6a0dad;
+  color: white;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.chatbot-options button:hover {
+  background: #5500a3;
+}
+
+/* Section forms */
+.chatbot-section {
+  animation: fadeIn 0.4s ease;
+}
+.chatbot-section input,
+.chatbot-section textarea,
+.chatbot-section select {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.chatbot-section textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+.chatbot-section button {
+  margin-right: 5px;
+  margin-top: 5px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #6a0dad;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.chatbot-section button:hover {
+  background: #5500a3;
+}
+
+/* Response bubble */
+.chatbot-response {
+  margin-top: 10px;
+  background: #f5f2fa;
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 4px solid #6a0dad;
+}
+.chatbot-response strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+/* 3. Mobile tweaks */
+@media (max-width: 500px) {
+  .chatbot-container {
+    padding: 15px;
+  }
+  .chatbot-options button {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  .chatbot-section input,
+  .chatbot-section textarea,
+  .chatbot-section select {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+  .chatbot-section input{
+    max-width: 335px;
+  }
+  .chatbot-section button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+}
