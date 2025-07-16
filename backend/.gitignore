@@ -1,19 +1,32 @@
-# Python
+# Virtual environment
+venv/
+
+# Python cache
 __pycache__/
 *.py[cod]
-*.egg
-*.egg-info/
-dist/
-build/
+*.so
 
-# Virtual environments
-venv/
-backend/venv/
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
 
 # Environment variables
 .env
 .env.*
 
-# IDE files
+# Logs
+*.log
+
+# VS Code / JetBrains IDEs
 .vscode/
 .idea/
+*.sublime-project
+*.sublime-workspace
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
