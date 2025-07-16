@@ -1,16 +1,19 @@
 from fastapi import APIRouter
 from app.schemas import ChatRequest
 from app.supabase_client import supabase
-from langchain.llms import OpenAI
-import os
+from langchain_google_genai import ChatGoogleGenerativeAI
+
+# Initialize FastAPI router
 router = APIRouter(
     prefix="/chat",
     tags=["chat"]
 )
 
-llm = OpenAI(model_name="gpt-3.5-turbo",
-        temperature=0.7,
-        openai_api_key=os.getenv("OPENAI_API_KEY"))
+# Gemini LLM
+llm = ChatGoogleGenerativeAI(
+    model="gemini-1.5-flash",    
+    temperature=0.7
+)
 
 @router.post("/")
 async def chat(req: ChatRequest):
@@ -33,26 +36,30 @@ Guest question: {req.message}
 
 Provide your response:
 """
-    response = llm.predict(prompt)
 
+    # Gemini supports .invoke()
+    response = llm.invoke(prompt)
+
+    # Store in Supabase
     supabase.table("chats").insert({
         "user_id": req.user_id,
         "message": req.message,
-        "response": response
+        "response": response.content
     }).execute()
 
-    return {"response": response}
+    return {"response": response.content}
 
 # NEW ENDPOINT for Sentiment
 @router.post("/sentiment")
 async def sentiment(req: ChatRequest):
-    prompt = f"""
+    sentiment_prompt = f"""
 Classify the sentiment of this message as Positive, Neutral, or Negative.
 
 Message: {req.message}
 
 Sentiment:
 """
-    sentiment = llm.predict(prompt).strip()
+    sentiment_response = llm.invoke(sentiment_prompt)
+    sentiment_text = sentiment_response.content.strip()
 
-    return {"sentiment": sentiment}
+    return {"sentiment": sentiment_text}
