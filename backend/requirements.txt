@@ -105,7 +105,6 @@ supabase==2.16.0
 supafunc==0.10.1
 sympy==1.14.0
 tenacity==8.5.0
-torch==2.7.1
 tqdm==4.67.1
 typing-inspect==0.9.0
 typing-inspection==0.4.1
