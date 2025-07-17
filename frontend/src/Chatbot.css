@@ -1,15 +1,4 @@
-/* 1. Make the body a flex-center wrapper */
-html, body {
-  height: 100%;
-  margin: 0;
-}
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #f0f0f0;       /* subtle page background */
-  padding: 20px;            /* some breathing room on very small devices */
-}
+ 
 
 /* 2. Chatbot container */
 .chatbot-container {
@@ -21,6 +10,8 @@ body {
   box-shadow: 0 0 12px rgba(0,0,0,0.15);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   transition: all 0.3s ease;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Header */

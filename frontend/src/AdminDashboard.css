@@ -6,8 +6,6 @@
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 0 12px rgba(0,0,0,0.1);
-  /* align-items: center; */
-  /* justify-content: center !important; */
 }
 
 .dashboard-title {
@@ -109,9 +107,12 @@
  
 
 @media (max-width: 600px) {
-  
+  .dashboard-container{
+    margin: auto;
+    justify-content: center;
+  }
   .dashboard-table-wrapper {
-    overflow-x: hidden; /* no horizontal scroll needed */
+    overflow-x: hidden;  
   }
   .dashboard-table {
     display: block;

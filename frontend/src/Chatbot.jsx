@@ -22,7 +22,7 @@ function Chatbot() {
   const [checkOut, setCheckOut] = useState("");
   const [bookingSuccess, setBookingSuccess] = useState("");
 
-  const API_BASE = "http://localhost:8000";
+  const API_BASE = "https://chieftrain.onrender.com";
 
   // Voice Recognition
   const recognition =

@@ -9,7 +9,7 @@ function AdminDashboard() {
   const [requests, setRequests] = useState([]);
   const [bookings, setBookings] = useState([]);
 
-  const API_BASE = "http://localhost:8000";
+  const API_BASE = "https://chieftrain.onrender.com";
 
   const fetchData = async () => {
     const reqRes = await axios.get(`${API_BASE}/request/`);
