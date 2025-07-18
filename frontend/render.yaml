@@ -1,0 +1,9 @@
+services:
+  - type: static
+    name: chieftrain-1
+    staticPublishPath: dist
+    buildCommand: npm install && npm run build
+    redirects:
+      - source: "/*"
+        destination: "/index.html"
+        status: 200
