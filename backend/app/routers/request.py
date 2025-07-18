@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 from app.supabase_client import supabase
+from app.sms_utils import send_sms  # ➕ Import the SMS function
 
 router = APIRouter(
     prefix="/request",
@@ -14,13 +15,22 @@ class RoomRequest(BaseModel):
 
 @router.post("/")
 async def create_request(req: RoomRequest):
+    # Save to Supabase
     record = supabase.table("room_requests").insert({
         "room_number": req.room_number,
         "phone_number": req.phone_number,
         "request": req.request,
         "status": "pending"
     }).execute()
-    return {"message": "Request logged successfully"}
+
+    # Send SMS to guest
+    message = (
+        f"📩 Dear Guest in Room {req.room_number},\n"
+        f"Your request \"{req.request}\" has been received. We’ll update you once it’s resolved."
+    )
+    send_sms(to=req.phone_number, body=message)
+
+    return {"message": "Request logged and SMS sent"}
 
 @router.get("/")
 async def get_requests():
@@ -29,5 +39,40 @@ async def get_requests():
 
 @router.patch("/{request_id}/resolve")
 async def mark_resolved(request_id: str):
-    supabase.table("room_requests").update({"status": "resolved"}).eq("id", request_id).execute()
-    return {"message": "Request marked as resolved"}
+    # Fetch request to get phone number and info
+    data = supabase.table("room_requests") \
+        .select("*") \
+        .eq("id", request_id) \
+        .single() \
+        .execute()
+    request_data = data.data
+
+    # Update status in DB
+    supabase.table("room_requests") \
+        .update({"status": "resolved"}) \
+        .eq("id", request_id) \
+        .execute()
+
+    # Normalize phone number for India
+    raw_phone = request_data["phone_number"].strip()
+    if not raw_phone.startswith("+91"):
+        normalized_phone = "+91" + raw_phone.lstrip("0")  # strip any leading zeroes
+    else:
+        normalized_phone = raw_phone
+
+    # Send resolution SMS
+    message = (
+        f"✅ Hello! Your request “{request_data['request']}” "
+        f"for Room {request_data['room_number']} has been resolved. Thank you!"
+    )
+    send_sms(to=normalized_phone, body=message)
+
+    return {"message": "Request marked as resolved and SMS sent"}
+
+
+
+@router.delete("/{request_id}")
+async def delete_request(request_id: str):
+    print("Deleting request with ID:", request_id)
+    supabase.table("room_requests").delete().eq("id", request_id).execute()
+    return {"message": "Request deleted"}
