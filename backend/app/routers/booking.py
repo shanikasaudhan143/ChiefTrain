@@ -107,7 +107,7 @@ def check_availability(check_in: str = Query(...), check_out: str = Query(...)):
     existing = supabase.table("bookings").select("*").eq("status", "confirmed").execute()
     logger.info(f"🔍 Fetched {len(existing.data)} confirmed bookings")
 
-    room_counts = {"Deluxe": 5, "Suite": 3, "Standard": 10}
+    room_counts = {"Deluxe": 10, "Suite": 20, "Standard": 30}
 
     user_check_in = datetime.strptime(check_in, "%Y-%m-%d").date()
     user_check_out = datetime.strptime(check_out, "%Y-%m-%d").date()

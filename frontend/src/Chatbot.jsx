@@ -24,12 +24,22 @@ function Chatbot() {
   const [isBookingLoading, setIsBookingLoading]   = useState(false);
   const [isCheckingLoading, setIsCheckingLoading] = useState(false);
 
-  const API_BASE = "http://localhost:8000";
+  const API_BASE = "https://chieftrain.onrender.com";
   const faqList = [
-    { question: "What time is check-in?", answer: "Check-in is at 2 PM." },
-    { question: "Is breakfast free?", answer: "Yes, we offer complimentary buffet breakfast from 7 AM to 10 AM." },
-    { question: "Do you allow pets?", answer: "No, pets are not allowed in the hotel." },
-  ];
+  { question: "What time is check-in?", answer: "Check-in is at 2 PM." },
+  { question: "What time is check-out?", answer: "Check-out is at 11 AM." },
+  { question: "Is breakfast free?", answer: "Yes - we offer a complimentary buffet breakfast from 7 AM to 10 AM." },
+  { question: "Do you allow pets?", answer: "Sorry, pets are not allowed on the premises." },
+  { question: "How do I connect to Wi-Fi?", answer: "Our Wi-Fi is free. Network: “GrandPalaceGuest”, no password required." },
+  { question: "Can I request a late check-out?", answer: "Late check-out (until 1 PM) may be available—please ask the front desk the day before departure." },
+  { question: "Is parking available?", answer: "Yes, we have secure on-site parking for \$15/day." },
+  { question: "Do you offer airport shuttle service?", answer: "Yes—24 hr shuttle to/from XYZ Airport. Please book 4 hours in advance." },
+  { question: "What’s your cancellation policy?", answer: "Free cancellation up to 24 hours before arrival; after that we charge one night’s rate." },
+  { question: "Are there laundry services?", answer: "Same-day laundry and dry-cleaning are available—drop your items before 9 AM." },
+  { question: "Do you have a fitness center?", answer: "Yes, open 24 hours on the 3rd floor—access with your room key." },
+  { question: "Can I get an extra bed?", answer: "Yes, roll-away beds are \$25/night—please request at least 12 hours ahead." },
+];
+
 
   const recognition = "webkitSpeechRecognition" in window ? new window.webkitSpeechRecognition() : null;
 
