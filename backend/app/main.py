@@ -11,7 +11,8 @@ app = FastAPI(
 origins = [
     "http://localhost:3000",
     "http://localhost:5173",
-    "https://chieftrain-1.onrender.com"
+    "https://chieftrain-1.onrender.com",
+    "https://chief-train-hr5t.vercel.app"
 ]
 app.add_middleware(
     CORSMiddleware,
