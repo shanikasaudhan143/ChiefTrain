@@ -12,7 +12,7 @@ import {
 } from "react-icons/fa";
 import "./AdminDashboard.css";
 
-const API_BASE = "https://chieftrain.onrender.com";
+const API_BASE = "https://chieftrain.onrender.com";  
 
 export default function AdminDashboard() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -65,6 +65,8 @@ export default function AdminDashboard() {
       setIsSentimentsLoading(false);
     }
   };
+
+  console.log("aiSentiment:", aiSentiment);
 
   useEffect(() => {
     if (authenticated) fetchData();

@@ -23,8 +23,8 @@ function Chatbot() {
   const [isRequestLoading, setIsRequestLoading]   = useState(false);
   const [isBookingLoading, setIsBookingLoading]   = useState(false);
   const [isCheckingLoading, setIsCheckingLoading] = useState(false);
-
-  const API_BASE = "https://chieftrain.onrender.com";
+  const [loading, setLoading] = useState(true);
+  const API_BASE = "https://chieftrain.onrender.com"; // Update with your API base URL
   const faqList = [
   { question: "What time is check-in?", answer: "Check-in is at 2 PM." },
   { question: "What time is check-out?", answer: "Check-out is at 11 AM." },
@@ -39,7 +39,27 @@ function Chatbot() {
   { question: "Do you have a fitness center?", answer: "Yes, open 24 hours on the 3rd floor—access with your room key." },
   { question: "Can I get an extra bed?", answer: "Yes, roll-away beds are \$25/night—please request at least 12 hours ahead." },
 ];
+   
+  useEffect(() => {
+    axios.get(`${API_BASE}/chat/ping`)
+      .then(() => {
+        setLoading(false); // Backend is ready
+      })
+      .catch((err) => {
+        console.error("Backend not ready yet:", err);
+        // Retry after short delay
+        setTimeout(() => window.location.reload(), 3000);
+      });
+  }, []);
 
+  if (loading) {
+    return (
+      <div className="chatbot-loading">
+        <div className="spinner"></div>
+        <p>Starting the Concierge…</p>
+      </div>
+    );
+  }
 
   const recognition = "webkitSpeechRecognition" in window ? new window.webkitSpeechRecognition() : null;
 

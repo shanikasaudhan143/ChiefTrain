@@ -21,6 +21,11 @@ llm = ChatGoogleGenerativeAI(
     temperature=0.7
 )
 
+@router.get("/ping")
+async def ping():
+    return {"status": "ok"}
+
+
 @router.post("/")
 async def chat(req: ChatRequest):
     user_id = req.user_id or "guest"
@@ -157,10 +162,16 @@ async def ai_generated_sentiment_summary():
 
     sentiments = {"Positive": [], "Negative": [], "Neutral": []}
     for chat in chats:
-        sentiment = (chat.get("sentiment") or "").capitalize()
+        sentiment_raw = (chat.get("sentiment") or "").strip().lower()
         message = chat.get("message", "").strip()
-        if sentiment in sentiments and message:
-            sentiments[sentiment].append(message)
+
+        if "positive" in sentiment_raw and message:
+            sentiments["Positive"].append(message)
+        elif "negative" in sentiment_raw and message:
+            sentiments["Negative"].append(message)
+        elif "neutral" in sentiment_raw and message:
+            sentiments["Neutral"].append(message)
+
 
     # Trim long input
     positive = sentiments["Positive"][:30]
