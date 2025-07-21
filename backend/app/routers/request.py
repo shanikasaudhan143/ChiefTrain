@@ -15,10 +15,20 @@ class RoomRequest(BaseModel):
 
 @router.post("/")
 async def create_request(req: RoomRequest):
+    # Ensure phone number starts with +91
+    phone_number = req.phone_number.strip()
+    if not phone_number.startswith("+91"):
+        if phone_number.startswith("0"):
+            phone_number = "+91" + phone_number[1:]
+        elif phone_number.startswith("91"):
+            phone_number = "+" + phone_number
+        else:
+            phone_number = "+91" + phone_number
+
     # Save to Supabase
     record = supabase.table("room_requests").insert({
         "room_number": req.room_number,
-        "phone_number": req.phone_number,
+        "phone_number": phone_number,
         "request": req.request,
         "status": "pending"
     }).execute()
@@ -28,9 +38,10 @@ async def create_request(req: RoomRequest):
         f"📩 Dear Guest in Room {req.room_number},\n"
         f"Your request \"{req.request}\" has been received. We’ll update you once it’s resolved."
     )
-    send_sms(to=req.phone_number, body=message)
+    send_sms(to=phone_number, body=message)
 
     return {"message": "Request logged and SMS sent"}
+
 
 @router.get("/")
 async def get_requests():

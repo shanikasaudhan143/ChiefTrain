@@ -1,9 +1,12 @@
 import logging
+import re
+from datetime import datetime
 from fastapi import APIRouter, Query
+from typing import Optional
+
 from app.schemas import BookingRequest
 from app.supabase_client import supabase
 from app.email_utils import send_booking_email
-from datetime import datetime
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -14,28 +17,47 @@ router = APIRouter(
     tags=["booking"]
 )
 
+def parse_date(date_str: str) -> datetime.date:
+    return datetime.strptime(date_str, "%Y-%m-%d").date()
+
+def is_valid_email(email: str) -> bool:
+    return re.match(r"[^@]+@[^@]+\.[^@]+", email) is not None
+
 @router.post("/")
 async def create_booking(req: BookingRequest):
     logger.info(f"🔹 Received booking request: {req.dict()}")
-    
-    existing = supabase.table("bookings").select("*").eq("room_type", req.room_type).eq("status", "confirmed").execute()
+
+    if not is_valid_email(req.user_id):
+        logger.warning("❌ Invalid email format")
+        return {"message": "Invalid email format."}
+
+    existing = supabase.table("bookings").select("*") \
+        .eq("room_type", req.room_type).eq("status", "confirmed").execute()
+
     logger.info(f"🔍 Existing confirmed bookings: {len(existing.data)}")
 
-    conflict = False
+    overlap_count = 0
     for b in existing.data:
-        logger.debug(f"🗓️ Checking overlap with: {b}")
         if not (req.check_out < b["check_in"] or req.check_in > b["check_out"]):
-            conflict = True
-            logger.warning("⚠️ Booking conflict found.")
-            break
+            overlap_count += 1
 
-    if conflict:
-        return {"message": "Room not available for these dates."}
+    room_limits = {"Deluxe": 10, "Suite": 20, "Standard": 30}
+    room_limit = room_limits.get(req.room_type, 0)
+
+    if overlap_count >= room_limit:
+        logger.warning(f"⚠️ Booking conflict: {overlap_count} overlapping bookings found for {req.room_type}")
+        availability = check_availability(req.check_in, req.check_out)
+        return {
+            "message": f"No available {req.room_type} rooms for these dates.",
+            "available_rooms": availability
+        }
+
 
     confirmation = (
         f"Booking request for {req.name}, {req.room_type} room from "
         f"{req.check_in} to {req.check_out}."
     )
+
     supabase.table("bookings").insert({
         "user_id": req.user_id,
         "name": req.name,
@@ -101,7 +123,11 @@ async def update_booking_status(booking_id: str, status: str):
 
 
 @router.get("/availability/")
-def check_availability(check_in: str = Query(...), check_out: str = Query(...)):
+def check_availability(
+    check_in: str = Query(...),
+    check_out: str = Query(...),
+    room_type: Optional[str] = None
+):
     logger.info(f"📅 Checking availability from {check_in} to {check_out}")
 
     existing = supabase.table("bookings").select("*").eq("status", "confirmed").execute()
@@ -109,29 +135,24 @@ def check_availability(check_in: str = Query(...), check_out: str = Query(...)):
 
     room_counts = {"Deluxe": 10, "Suite": 20, "Standard": 30}
 
-    user_check_in = datetime.strptime(check_in, "%Y-%m-%d").date()
-    user_check_out = datetime.strptime(check_out, "%Y-%m-%d").date()
+    user_check_in = parse_date(check_in)
+    user_check_out = parse_date(check_out)
 
     for b in existing.data:
-        b_check_in = datetime.strptime(b["check_in"], "%Y-%m-%d").date()
-        b_check_out = datetime.strptime(b["check_out"], "%Y-%m-%d").date()
+        b_check_in = parse_date(b["check_in"])
+        b_check_out = parse_date(b["check_out"])
 
-        logger.debug(f"🔄 Comparing with booking: {b}")
-        logger.info(f"Comparing with booking: {b['room_type']} from {b['check_in']} to {b['check_out']}")
-        logger.info(f"Parsed dates: {b_check_in} to {b_check_out}")
-        logger.info(f"User wants from {user_check_in} to {user_check_out}")
         if not (user_check_out <= b_check_in or user_check_in > b_check_out):
-            room_type = b["room_type"]
-            if room_type in room_counts:
-                room_counts[room_type] = max(0, room_counts[room_type] - 1)
-                logger.info(f"➖ Decremented {room_type}: now {room_counts[room_type]}")
+            rt = b["room_type"]
+            if rt in room_counts:
+                room_counts[rt] = max(0, room_counts[rt] - 1)
 
     logger.info(f"✅ Final room availability: {room_counts}")
-    return room_counts
+    return {rt: room_counts[rt] for rt in room_counts} if not room_type else {room_type: room_counts.get(room_type, 0)}
+
 
 @router.delete("/{booking_id}")
 async def delete_booking(booking_id: str):
     supabase.table("bookings").delete().eq("id", booking_id).execute()
+    logger.info(f"🗑️ Deleted booking {booking_id}")
     return {"message": "Booking deleted"}
-
-
