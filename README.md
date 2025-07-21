@@ -77,7 +77,7 @@ Follow these steps to run the project locally:
 
 ## 🌐 Sample user
    To explore the system's functionalities, you can use these sample user profiles:
-    -**Room Guest**: Access the chatbot to make queries, book rooms, or request services.
-    -**Admin**: Log in to the admin panel with the password hotel@123 to manage backend operations, requests, and bookings.
+   - **Room Guest**: Access the chatbot to make queries, book rooms, or request services.
+   - **Admin**: Log in to the admin panel with the password hotel@123 to manage backend operations, requests, and bookings.
 
  
