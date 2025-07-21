@@ -1,172 +1,84 @@
-Hotel Concierge AI Chatbot 🏨
+# AIChieftain: Hotel Concierge AI Chatbot 🏨
 
-A next-gen AI-powered hotel chatbot and admin dashboard built for the IIT Hackathon 2025 (Challenge: AIChieftain). It handles room bookings, service requests, FAQs, and sentiment analysis using cutting-edge LLM tech.
+A next-generation AI-powered hotel chatbot and admin dashboard, developed for the IIT Hackathon 2025 (Challenge: AIChieftain). This innovative system leverages cutting-edge Large Language Model (LLM) technology to streamline hotel operations, handling everything from room bookings and service requests to FAQs and sentiment analysis.
 
-🚀 Features
+---
 
-Voice and text-based chatbot
+## 🚀 Features
 
-Booking system with availability check
+Our Hotel Concierge AI Chatbot is packed with features designed to enhance both guest experience and staff efficiency:
 
-Room service request (with SMS confirmation)
+- **Voice and Text-Based Chatbot:** Guests can interact seamlessly using either voice commands or text input.  
+- **Intelligent Booking System:** Real-time availability checks ensure accurate room bookings.  
+- **Room Service Request Management:** Guests can request room services with immediate SMS confirmation.  
+- **AI-Generated Replies:** Powered by Google Gemini, the chatbot delivers context-aware responses.  
+- **Sentiment Analysis & Dashboard Summary:** AI-driven insights into guest sentiment, visualized in a user-friendly dashboard.  
+- **Comprehensive Admin Panel:** A dedicated interface for staff to manage bookings, requests, and sentiment data.
 
-AI-generated replies via Google Gemini
+---
 
-Sentiment analysis and dashboard summary
+## 📄 Tech Stack
 
-Admin panel for staff to manage requests/bookings
+This project is built on a modern, scalable stack:
 
-📄 Tech Stack
+- **Frontend:** React (Chatbot UI & Admin Dashboard)  
+- **Backend:** FastAPI (Python)  
+- **LLM:** Gemini 1.5 Flash (via LangChain)  
+- **Database:** Supabase  
+- **Email Service:** SendGrid  
+- **SMS Service:** Twilio  
 
-Frontend: React (Chatbot & Admin Dashboard)
+---
 
-Backend: FastAPI
+## 🌐 Live Demo
 
-LLM: Gemini 1.5 Flash (via LangChain)
+Try it out in your browser:
 
-Database: Supabase
+- **Chatbot:** `https://your-deployment-url/chatbot`  
+- **Admin Panel:** `https://your-deployment-url/admin`  
 
-Email: SendGrid
+---
 
-SMS: Twilio
+## 🔧 Setup Instructions
 
-🌐 Live Demo
+Follow these steps to run the project locally:
 
-Chatbot: your-deployment-url/chatbot
+1. **Clone the repository**  
+   ```bash
+   git clone <your-repo-url>
+   cd <your-repo-directory>
 
-Admin Panel: your-deployment-url/admin
+2. **Create a .env file in the project root with the following variables:**  
+   ```bash
+   SUPABASE_URL=…
+   SUPABASE_KEY=…
+   GEMINI_API_KEY=…
+   SENDGRID_API_KEY=…
+   TWILIO_ACCOUNT_SID=…
+   TWILIO_AUTH_TOKEN=…
+   TWILIO_PHONE_NUMBER=…
 
-🔧 Setup Instructions
 
-Clone the repo
+3. **Start the backend (FastAPI):**  
+   ```bash
+   cd backend
+   python -m venv venv
+   venv\Scripts\activate
+   pip install -r requirements.txt
+   uvicorn app.main:app --reload
 
-Add .env file with required credentials:
 
-SUPABASE_URL=...
-SUPABASE_KEY=...
-OPENAI_API_KEY=...
-SENDGRID_API_KEY=...
-TWILIO_ACCOUNT_SID=...
-TWILIO_AUTH_TOKEN=...
-TWILIO_PHONE_NUMBER=...
+4. **Start the frontend (React):**  
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
 
-Start backend (FastAPI):
 
-uvicorn main:app --reload
+## 🌐 Sample user
+   To explore the system's functionalities, you can use these sample user profiles:
 
-Start frontend (React):
+   Room Guest: Access the chatbot to make queries, book rooms, or request services.
 
-npm install
-npm start
-
-🔹 Sample Users
-
-Room Guest: use chatbot for queries/booking/service
-
-Admin: login with password hotel@123 to manage backend
-
-architecture.md
-
-📏 System Architecture
-
-🚀 Overview
-
-This architecture powers a hotel chatbot and admin system using FastAPI backend, React frontend, and Gemini LLM integration.
-
-🔹 Components
-
-1. Frontend (React)
-
-Chatbot UI (Chatbot.jsx)
-
-Admin Dashboard (AdminDashboard.jsx)
-
-Handles all user input, displays responses, connects to backend APIs
-
-2. Backend (FastAPI)
-
-Endpoints: /chat, /booking, /request, /faq
-
-LLM: Gemini 1.5 Flash via LangChain
-
-Sentiment Analysis & AI summary
-
-Email (SendGrid) & SMS (Twilio) integration
-
-3. Database (Supabase)
-
-Stores chats, bookings, and room_requests
-
-Used by both chatbot and dashboard
-
-4. External Services
-
-Gemini: LLM to respond to chat and classify sentiment
-
-Twilio: Sends SMS for room requests/resolution
-
-SendGrid: Sends booking confirmation/rejection emails
-
-🔄 Data Flow
-
-Guest interacts via chatbot UI
-
-Frontend sends request to FastAPI backend
-
-Backend processes input via Gemini and database
-
-Response sent back to frontend UI and stored in Supabase
-
-Admin dashboard retrieves & displays data
-
-api.md
-
-🔖 API Documentation
-
-Base URL: https://your-deployment-url
-
-📡 /chat/
-
-POST: { user_id, message }
-
-Returns: { response: "..." }
-
-Saves chat + sentiment in DB
-
-📡 /chat/sentiment-summary-ai
-
-GET
-
-Returns: { top_positive, top_negative, top_neutral }
-
-📆 /booking/
-
-POST: { user_id, name, room_type, check_in, check_out }
-
-Returns: { message: "submitted!" }
-
-GET: Fetch all bookings
-
-PATCH /booking/{id}/status?status=confirmed|rejected
-
-DELETE /booking/{id}
-
-GET /booking/availability/?check_in=YYYY-MM-DD&check_out=YYYY-MM-DD
-
-Returns availability by room type
-
-🛎 /request/
-
-POST: { room_number, phone_number, request }
-
-Sends SMS and logs request
-
-GET: Fetch all requests
-
-PATCH /request/{id}/resolve
-
-DELETE /request/{id}
-
-📖 /faq/
-
-GET: Returns hardcoded FAQs (3 sample Q&A)
+   Admin: Log in to the admin panel with the password hotel@123 to manage backend operations, requests, and bookings.
+   
