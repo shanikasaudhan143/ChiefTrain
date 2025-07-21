@@ -48,7 +48,7 @@ Follow these steps to run the project locally:
    git clone ChiefTain
    cd ChiefTain
 
-2. **Create a .env file in the project root with the following variables:**  
+2. **Create a .env file in the  ChiefTain/backend with the following variables:**  
    ```bash
    SUPABASE_URL=…
    SUPABASE_KEY=…
