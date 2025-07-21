@@ -4,7 +4,7 @@
 
 The following API endpoints facilitate communication between the frontend and backend, and manage data operations.
 
-**Base URL:** `https://your-deployment-url`
+**Base URL:** `https://chieftrain.onrender.com`
 
 ---
 
